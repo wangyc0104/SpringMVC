@@ -1,4 +1,5 @@
 /applicationContext.xml
-/wyc
 /db.properties
+/log4j.properties
 /springmvc.xml
+/wyc
