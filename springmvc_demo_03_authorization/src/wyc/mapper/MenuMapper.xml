@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="wyc.mapper.MenuMapper">
+
+	<!-- selectMenuByPid的resultMap -->
+	<!-- 注：该查询嵌套了一个递归查询，即利用查找到的当前menu对象的id继续调用selectMenuByPid，直到查不到为止 -->
+	<resultMap type="menu" id="menuMap">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="pid" column="pid" />
+		<collection property="childMenuList" javaType="ArrayList" ofType="menu" select="selectMenuByPid" column="id"></collection>
+	</resultMap>
+
+	<!-- public List<Menu> selectMenuByPid(int pid); -->
+	<!-- 根据[父菜单的id]查找[菜单id列表] -->
+	<select id="selectMenuByPid" parameterType="int" resultMap="menuMap">
+		select * from menu where pid = #{pid}
+	</select>
+
+	<!-- public List<Menu> selectMenuByRoleList(@Param("roleList") List<Role> roleList, @Param("pid") int pid); -->
+	<!-- 根据[角色列表]查找[菜单对象列表] -->
+	<select id="selectMenuByRoleList" resultMap="menuMap">
+		SELECT DISTINCT
+		m.*
+		FROM menu m
+		LEFT JOIN role_menu rm
+		ON m.id = rm.mid
+		WHERE rm.rid IN
+		<foreach collection="roleList" item="role" index="index" open="(" close=")" separator=",">
+			#{role.id}
+		</foreach>
+		AND m.pid = #{pid}
+    </select>  
+	
+</mapper>

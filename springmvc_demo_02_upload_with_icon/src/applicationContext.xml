@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    	https://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        https://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd"
+    default-autowire="byName">
+    
+    <!-- **************** -->
+    <!-- *	整合组件扫描	* -->
+    <!-- **************** -->
+    
+    <!-- 扫描Service包 -->
+    <context:component-scan base-package="wyc.service.impl"></context:component-scan>
+    
+    <!-- 扫描属性包 -->
+    <context:property-placeholder location="classpath:db.properties"/>
+    
+    
+    <!-- **************** -->
+    <!-- *	整合Mybatis	* -->
+    <!-- **************** -->
+    
+    <!-- DataSource -->
+    <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="${jdbc.driver}"></property>
+    	<property name="url" value="${jdbc.url}"></property>
+    	<property name="username" value="${jdbc.username}"></property>
+    	<property name="password" value="${jdbc.password}"></property>
+    </bean>
+    
+    <!-- SqlSessionFactory -->
+    <bean name="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"></property>
+    	<property name="typeAliasesPackage" value="wyc.pojo"></property>
+    </bean>
+    
+    <!-- Mapper扫描器 -->
+    <bean name="scanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    	<property name="basePackage" value="wyc.mapper"></property>
+    	<property name="sqlSessionFactoryBeanName" value="factory"></property>
+    </bean>
+    
+    
+    <!-- **************** -->
+    <!-- *	自定义Beans	* -->
+    <!-- **************** -->
+    
+</beans>

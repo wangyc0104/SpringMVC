@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="wyc.mapper.FileMapper">
+	
+	<resultMap type="file" id="fileResultMap">
+		<id property="id" column="id"/>
+		<result property="fileName" column="file_name"/>
+		<result property="downloadCounts" column="download_counts"/>
+	</resultMap>
+	
+	<!-- 查找所有文件名 -->
+	<select id="selAll" resultMap="fileResultMap">
+		SELECT
+			*
+		FROM
+			t_file
+	</select>
+	
+	<!-- 增加下载次数 -->
+	<update id="downloadCountsPlus">
+		UPDATE
+			t_file
+		SET
+			download_counts = download_counts + #{count}
+		WHERE
+			id = #{id}
+	</update>
+
+</mapper>
